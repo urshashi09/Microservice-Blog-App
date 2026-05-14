@@ -48,12 +48,85 @@ export const updateBlog= trycatch(async (req: AuthenticatedRequest, res) => {
         return res.status(404).json({message: "Blog not found"})
     }
 
-    const existingBlog = blog[0];
+    const existingBlog = blog[0]
 
+    if (!existingBlog) {
+        return res.status(404).json({message: "Blog not found"})
+    }
 
     if (String(existingBlog.author) !== String(req.user?._id)) {
         return res.status(401).json({message: "Unauthorized"})
     }
 
-    let imageUrl= blog[0].image
+    let imageUrl= existingBlog.image
+
+    if(file){
+        const fileBuffer= getBuffer(file)
+    
+
+    if(!fileBuffer || !fileBuffer.content) {
+        return res.status(400).json({message: "Invalid file format"})
+    }
+    const cloud = await cloudinary.uploader.upload(fileBuffer.content, {
+        folder: "blogs"
+    })
+
+    imageUrl= cloud.secure_url
+    }
+
+    const updatedBlog= await sql`
+    UPDATE blogs SET 
+    title= ${title || existingBlog.title},
+    blogcontent= ${blogcontent || existingBlog.blogcontent},
+    image= ${imageUrl},
+    category= ${category || existingBlog.category},
+    description= ${description || existingBlog.description}
+    
+    WHERE id = ${id}
+    RETURNING *
+    `
+
+    res.status(200).json({
+        message: "Blog updated successfully",
+        blog: updatedBlog[0]
+    })
+
+    
+})
+
+
+export const deleteBlog= trycatch(async (req: AuthenticatedRequest, res) => {
+    const {id}= req.params
+
+    const blog = await sql`
+        SELECT * FROM blogs WHERE id = ${id}
+    `
+    if (!blog.length) {
+        return res.status(404).json({message: "Blog not found"})
+    }
+
+    const existingBlog = blog[0]
+
+    if (!existingBlog) {
+        return res.status(404).json({message: "Blog not found"})
+    }
+
+    if (String(existingBlog.author) !== String(req.user?._id)) {
+        return res.status(401).json({message: "Unauthorized"})
+    }
+
+    await sql`
+        DELETE FROM savedblogs WHERE blogid = ${id}
+    `
+    await sql`
+        DELETE FROM comments WHERE blogid = ${id}
+    `
+    await sql`
+        DELETE FROM blogs WHERE id = ${id}
+    `
+
+    res.status(200).json({
+        message: "Blog deleted successfully"
+    })
+
 })
