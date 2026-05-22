@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post('/login', login)
 router.get('/myprofile', isAuth, myProfile)
-router.get('/profile/:id', isAuth, getProfile)
+router.get('/profile/:id', getProfile)
 router.put('/update', isAuth, updateUser)
 router.post('/updateprofilepic', isAuth,uploadFile, updateProfilePic)
 

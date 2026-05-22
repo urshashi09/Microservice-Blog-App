@@ -1,5 +1,5 @@
 {
-  "name": "author",
+  "name": "blog",
   "version": "1.0.0",
   "main": "server.js",
   "type": "module",
@@ -16,20 +16,19 @@
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
     "@types/amqplib": "^0.10.8",
+    "@types/axios": "^0.9.36",
     "@types/cors": "^2.8.19",
     "@types/dotenv": "^6.1.1",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
-    "@types/multer": "^2.1.0",
     "amqplib": "^2.0.1",
-    "cloudinary": "^2.10.0",
+    "axios": "^1.16.1",
     "concurrently": "^9.2.1",
     "cors": "^2.8.6",
-    "datauri": "^4.1.0",
     "dotenv": "^17.4.2",
-    "exprexx": "^1.0.0",
+    "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
-    "multer": "^2.1.1",
+    "redis": "^5.12.1",
     "typescript": "^6.0.3"
   }
 }

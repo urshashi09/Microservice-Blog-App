@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import connectDB from './utils/db.js';
 import userRoutes from './routes/user.js'
 import {v2 as cloudinary} from 'cloudinary'
+import cors from 'cors'
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ cloudinary.config({
 })
 
 const app = express();
+app.use(cors())
 
 app.use(express.json());
 
@@ -20,7 +22,7 @@ connectDB();
 
 app.use('/api/user', userRoutes);
 
-const PORT = process.env.PORT || 6000;
+const PORT = process.env.PORT || 6001;
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
