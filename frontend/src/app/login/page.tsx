@@ -52,10 +52,12 @@ const LoginPage = () => {
       setUser(result.data.user)
       setIsAuth(true)
       toast.success("Login successful")
+      setUser(result.data.user)
       router.replace("/")
     } catch (error) {
       console.log("error", error)
       toast.error("Login failed")
+      setLoading(false)
     } finally {
       setLoading(false)
     }

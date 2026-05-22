@@ -4,12 +4,15 @@ import React from 'react'
 import { useState } from 'react'
 import Link from 'next/link'
 import { Button } from './ui/button'
-import { Menu, X } from 'lucide-react'
+import { CircleUserRound, Menu, X } from 'lucide-react'
 import { LogIn } from 'lucide-react'
 import { cn } from '@/src/lib/utils'
+import { useAppData } from '../context/AppContext'
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false)
+
+    const {isAuth}= useAppData()
 
     return (
         <nav className='bg-white shadow-md p-4 z-50' >
@@ -33,7 +36,15 @@ const Navbar = () => {
                         <Link href={"/blogs/saved"} className='hover:text-blue-500 '>Saved blogs</Link>
                     </li>
                     <li>
-                        <Link href={"/login"} className='hover:text-blue-500 '><LogIn /></Link>
+                        {isAuth ? (
+                            <Link href={"/profile"} className='hover:text-blue-500 '>
+                                <CircleUserRound />
+                            </Link>
+                        ) : (
+                            <Link href={"/login"} className='hover:text-blue-500 '>
+                                <LogIn />
+                            </Link>
+                        )}
                     </li>
                 </ul>
             </div>
@@ -47,7 +58,15 @@ const Navbar = () => {
                         <Link href={"/blogs/saved"} className='hover:text-blue-500 '>Saved blogs</Link>
                     </li>
                     <li>
-                        <Link href={"/login"} className='hover:text-blue-500 '><LogIn /></Link>
+                        {isAuth ? (
+                            <Link href={"/profile"} className='hover:text-blue-500 '>
+                                <CircleUserRound />
+                            </Link>
+                        ) : (
+                            <Link href={"/login"} className='hover:text-blue-500 '>
+                                <LogIn />
+                            </Link>
+                        )}
                     </li>
                 </ul>
             </div>
