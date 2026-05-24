@@ -7,14 +7,19 @@ interface cacheInvalidationMessage {
     keys: string[];
 }
 
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export const startCacheConsumer = async () => {
-    try {
+    const maxAttempts = Number(process.env.RABBITMQ_CONNECT_ATTEMPTS) || 10;
+
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+        try {
         const connection = await amqp.connect({
             protocol: "amqp",
-            hostname: "localhost",
-            port: 5672,
-            username: "admin",
-            password: "admin123",
+            hostname: process.env.RABBITMQ_HOST || "localhost",
+            port: Number(process.env.RABBITMQ_PORT) || 5672,
+            username: process.env.RABBITMQ_USER || "admin",
+            password: process.env.RABBITMQ_PASSWORD || "admin123",
         });
         const channel = await connection.createChannel();
 
@@ -64,7 +69,15 @@ export const startCacheConsumer = async () => {
             }
         })
 
-    } catch (error) {
-        console.error("Error connecting to RabbitMQ:", error);
+            return;
+        } catch (error) {
+            if (attempt === maxAttempts) {
+                console.error("Error connecting to RabbitMQ:", error);
+                return;
+            }
+
+            console.log(`RabbitMQ not ready, retrying cache consumer (${attempt}/${maxAttempts})`);
+            await wait(2000);
+        }
     }
 }

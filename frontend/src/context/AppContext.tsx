@@ -45,6 +45,12 @@ interface AppContextType{
     setLoading: React.Dispatch<React.SetStateAction<boolean>>;
     setIsAuth: React.Dispatch<React.SetStateAction<boolean>>;
     logoutUser: ()=> Promise<void>
+    blogs: Blog[] | null
+    blogLoading: boolean
+    setSearchQuery:React.Dispatch<React.SetStateAction<string>>;
+    searchQuery: string;
+    category: string;
+    setCategory: React.Dispatch<React.SetStateAction<string>> 
 }
 
 
@@ -80,6 +86,25 @@ export const AppProvider: React.FC<AppProviderProps>=(({children}) => {
         }
     }
 
+
+    const[blogLoading, setBlogLoading] = useState(true)
+    const [blogs, setBlogs]= useState<Blog[] | null>(null)
+    const [category, setCategory] = useState<string>("")
+    const [searchQuery, setSearchQuery] = useState<string>("")
+
+
+    async function fetchBlogs() {
+        setBlogLoading(true)
+        try{
+            const {data}= await axios.get<Blog[]>(`${blog_service}/blog/all?searchQuery=${searchQuery}&category=${category}`)
+            setBlogs(data)
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setBlogLoading(false)
+        }
+    }
+
     async function logoutUser(){
         Cookies.remove("token")
         setUser(null)
@@ -91,6 +116,7 @@ export const AppProvider: React.FC<AppProviderProps>=(({children}) => {
     useEffect(() => {
         const timer = window.setTimeout(() => {
             fetchUser()
+            
         }, 0)
 
         return () => {
@@ -98,8 +124,12 @@ export const AppProvider: React.FC<AppProviderProps>=(({children}) => {
         }
 
     }, [])
+    
+    useEffect(()=>{
+        fetchBlogs()
+    },[searchQuery, category])
     return (
-        <AppContext.Provider value={{ user, isAuth, loading, setUser, setLoading, setIsAuth, logoutUser}}>
+        <AppContext.Provider value={{ user, isAuth, loading, setUser, setLoading, setIsAuth, logoutUser, blogs, blogLoading, searchQuery, setSearchQuery, category, setCategory}}>
             <GoogleOAuthProvider clientId={"480344245099-46e22ukfddqd2h276kpruh939po6e7rc.apps.googleusercontent.com"}>
                 {children} <Toaster />
             </GoogleOAuthProvider>

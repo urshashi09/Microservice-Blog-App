@@ -11,11 +11,22 @@ import Cookies from 'js-cookie'
 import axios from 'axios'
 import { author_service } from '@/src/context/AppContext'
 import toast from 'react-hot-toast'
-import { title } from 'process'
 
 
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false })
 
+export const blogCategories = [
+    "Technology",
+    "Health",
+    "Travel",
+    "Food",
+    "Lifestyle",
+    "Education",
+    "Finance",
+    "Entertainment",
+    "Sports",
+    "Fashion"
+  ]
 interface BlogFormData {
   title: string
   description: string
@@ -24,8 +35,20 @@ interface BlogFormData {
   blogcontent: string
 }
 
+type ApiError = {
+  response?: {
+    data?: {
+      message?: unknown
+    }
+  }
+}
+
+const hasApiErrorResponse = (error: unknown): error is ApiError => {
+  return typeof error === 'object' && error !== null && 'response' in error
+}
+
 const getApiErrorMessage = (error: unknown, fallback: string) => {
-  if (!axios.isAxiosError(error)) {
+  if (!hasApiErrorResponse(error)) {
     return fallback
   }
 
@@ -131,7 +154,7 @@ const AddBlog = () => {
   const aiTitleResponse = async () => {
     try {
       setAiTitle(true)
-      const { data } = await axios.post(`${author_service}/ai/title`, { text: formdata.title })
+      const { data } = await axios.post<string>(`${author_service}/ai/title`, { text: formdata.title })
 
       setFormData({ ...formdata, title: data })
       toast.success("Title generated successfully")
@@ -150,7 +173,7 @@ const AddBlog = () => {
   const aiDescriptionResponse = async () => {
     try {
       setAiDescription(true)
-      const { data } = await axios.post(`${author_service}/ai/description`, { title: formdata.title, description: formdata.description })
+      const { data } = await axios.post<string>(`${author_service}/ai/description`, { title: formdata.title, description: formdata.description })
 
       setFormData({ ...formdata, description: data })
       toast.success("Description generated successfully")
@@ -168,7 +191,7 @@ const AddBlog = () => {
   const aiBlogResponse = async () => {
     try {
       setAiBlogLoading(true)
-      const { data } = await axios.post(`${author_service}/ai/blog`, { blog: formdata.blogcontent })
+      const { data } = await axios.post<{ html: string }>(`${author_service}/ai/blog`, { blog: formdata.blogcontent })
       setContent(data.html)
       setFormData({ ...formdata, blogcontent: data.html })
       toast.success("Blog content fixed successfully")

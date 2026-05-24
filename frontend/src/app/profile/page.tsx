@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card'
 import { User, useAppData, user_service } from '@/src/context/AppContext'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
@@ -11,7 +11,7 @@ import { Button } from '@/src/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
-import { redirect, useRouter } from 'next/dist/client/components/navigation'
+import { useRouter } from 'next/navigation'
 
 
 const InstagramIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -45,7 +45,7 @@ interface UpdateProfileResponse {
 }
 
 const ProfilePage = () => {
-    const {user, setUser, logoutUser}= useAppData()
+    const {user, setUser, logoutUser, loading: authLoading}= useAppData()
     const InputRef = React.useRef<HTMLInputElement>(null)
 
     const [loading, setLoading] = useState(false)
@@ -60,31 +60,21 @@ const ProfilePage = () => {
     })
     const router= useRouter()
 
-    if(!user) {
-        return redirect("/login")
-    }
+    useEffect(() => {
+        if (!authLoading && !user) {
+            router.replace("/login")
+        }
+    }, [authLoading, router, user])
 
     const logoutHandler= async()=>{
         await logoutUser()
     }
 
-    
-
-    useEffect(() => {
-        setFormData({
-            name: user?.name || "",
-            instagram: user?.instagram || "",
-            facebook: user?.facebook || "",
-            linkedin: user?.linkedin || "",
-            bio: user?.bio || ""
-        })
-    }, [user])
-
     const clickHandle= ()=>{
         InputRef.current?.click()
     }
-    const changeHandle = async (e: any) => {
-        const file = e.target.files[0]
+    const changeHandle = async (e: ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
         if (file) {
             const formData = new FormData()
             formData.append("file", file)
@@ -130,11 +120,15 @@ const ProfilePage = () => {
             setUser(data.user)
             setOpen(false)
 
-        }catch(error){
+        }catch{
             toast.error("Failed to update profile")
         } finally {
                 setLoading(false)
         }
+    }
+
+    if (authLoading || !user) {
+        return <Loading/>
     }
     
   return (
@@ -206,7 +200,18 @@ const ProfilePage = () => {
 
                         <Dialog open={open} onOpenChange={setOpen}>
                             <DialogTrigger asChild>
-                                <Button variant={"outline"}>Edit</Button>
+                                <Button
+                                    variant={"outline"}
+                                    onClick={() => setFormData({
+                                        name: user.name || "",
+                                        instagram: user.instagram || "",
+                                        facebook: user.facebook || "",
+                                        linkedin: user.linkedin || "",
+                                        bio: user.bio || ""
+                                    })}
+                                >
+                                    Edit
+                                </Button>
                             </DialogTrigger>
                             <DialogContent className="sm:*:max-w-[500px]" >
                                 <DialogHeader >
