@@ -10,6 +10,7 @@ import { oAuth2Client } from '../utils/googleConfig.js';
 import axios from 'axios';
 
 
+
 export const login= trycatch(async (req, res) => {
     const{code}= req.body
 
@@ -103,3 +104,5 @@ export const updateProfilePic= trycatch(async (req: AuthenticatedRequest, res) =
     })
     
 })
+
+

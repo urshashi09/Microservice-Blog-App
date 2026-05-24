@@ -9,8 +9,8 @@ import {GoogleOAuthProvider} from '@react-oauth/google'
 
 
 export const user_service= "http://localhost:6001/api/user"
-export const author_service= "http://localhost:5000/api/author"
-export const blog_service= "http://localhost:7000/api/blog"
+export const author_service= "http://localhost:5000/api/v1"
+export const blog_service= "http://localhost:7000/api/v1"
 
 export interface User{
     _id: string;

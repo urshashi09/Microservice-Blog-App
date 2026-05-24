@@ -9,12 +9,16 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@google/genai": "^2.6.0",
+    "@google/generative-ai": "^0.24.1",
     "@react-oauth/google": "^0.13.5",
     "@types/axios": "^0.9.36",
     "@types/js-cookie": "^3.0.6",
     "axios": "^1.16.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "jodit": "^4.12.2",
+    "jodit-react": "^5.3.21",
     "js-cookie": "^3.0.7",
     "lucide-react": "^1.16.0",
     "next": "16.2.6",
