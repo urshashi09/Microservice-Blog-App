@@ -32,7 +32,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (isAuth) {
-      router.replace("/")
+      router.replace("/blogs")
     }
   }, [isAuth, router])
 
@@ -75,21 +75,17 @@ const LoginPage = () => {
       (<div className='w-[350px] m-auto mt-[100px] '>
         <Card className="w-full max-w-sm">
       <CardHeader>
-        <CardTitle className='font-bold '>Login to your account</CardTitle>
-        <CardDescription>
-          Enter your email below to login to your account
+        <CardTitle className='font-bold text-xl '>Get Started!</CardTitle>
+        <CardDescription className='text-gray-500 text-md'>
+          Access and manage your blogs effortlessly.
         </CardDescription>
-        <CardAction>
-          <Button variant="link">Sign Up</Button>
-        </CardAction>
+        
       </CardHeader>
       <CardContent>
         
       </CardContent>
       <CardFooter className="flex-col gap-2">
-        <Button type="submit" className="w-full">
-          Login
-        </Button>
+        
         <Button onClick={() => googleLogin()} variant="outline" className="w-full">
           Login with Google <Image src="/google.png" width={24} height={24} alt="" />
         </Button>

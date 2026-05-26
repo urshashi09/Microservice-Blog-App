@@ -1,9 +1,8 @@
+import { redirect } from 'next/navigation'
 import React from 'react'
 
 const Home = () => {
-  return (
-    <div> Home</div>
-  )
+  return redirect("/blogs")
 }
 
 export default Home

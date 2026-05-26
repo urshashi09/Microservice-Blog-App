@@ -9,7 +9,7 @@ import React, { useRef, useState, useMemo, type ChangeEvent, type FormEvent } fr
 import dynamic from 'next/dynamic'
 import Cookies from 'js-cookie'
 import axios from 'axios'
-import { author_service } from '@/src/context/AppContext'
+import { author_service, useAppData } from '@/src/context/AppContext'
 import toast from 'react-hot-toast'
 
 
@@ -85,6 +85,8 @@ const AddBlog = () => {
   const editor = useRef(null);
   const [content, setContent] = useState('');
 
+  const { fetchBlogs } = useAppData()
+
   const [loading, setLoading] = useState(false);
   const [formdata, setFormData] = useState<BlogFormData>({
     title: '',
@@ -141,6 +143,9 @@ const AddBlog = () => {
         blogcontent: ''
       })
       setContent("")
+      setTimeout(() => {
+        fetchBlogs()
+      }, 4000)
     } catch (error) {
       console.error('Error adding blog:', error);
       toast.error(getApiErrorMessage(error, 'Failed to add blog. Please try again.'));

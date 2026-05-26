@@ -37,6 +37,13 @@ export interface Blog{
 
 }
 
+interface SavedBlogType extends Blog {
+    saved_id: string;
+    blogid: string;
+    userid: string;
+    saved_at: string;
+}
+
 interface AppContextType{
     user:User | null;
     isAuth: boolean;
@@ -51,6 +58,9 @@ interface AppContextType{
     searchQuery: string;
     category: string;
     setCategory: React.Dispatch<React.SetStateAction<string>> 
+    fetchBlogs: () => Promise<void>
+    savedBlogs: SavedBlogType[] | null
+    getSavedBlogs: () => Promise<void>
 }
 
 
@@ -105,6 +115,26 @@ export const AppProvider: React.FC<AppProviderProps>=(({children}) => {
         }
     }
 
+
+    const [savedBlogs, setSavedBlogs] = useState<SavedBlogType[] | null>(null)
+
+    async function getSavedBlogs() {
+        try{
+            const token = Cookies.get("token")
+            const {data}= await axios.get(`${blog_service}/blog/saved/all`,{
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            setSavedBlogs(data)
+            
+        } catch (error) {
+            console.log(error)
+        } 
+    } 
+        
+
+
     async function logoutUser(){
         Cookies.remove("token")
         setUser(null)
@@ -116,6 +146,7 @@ export const AppProvider: React.FC<AppProviderProps>=(({children}) => {
     useEffect(() => {
         const timer = window.setTimeout(() => {
             fetchUser()
+            getSavedBlogs()
             
         }, 0)
 
@@ -129,7 +160,7 @@ export const AppProvider: React.FC<AppProviderProps>=(({children}) => {
         fetchBlogs()
     },[searchQuery, category])
     return (
-        <AppContext.Provider value={{ user, isAuth, loading, setUser, setLoading, setIsAuth, logoutUser, blogs, blogLoading, searchQuery, setSearchQuery, category, setCategory}}>
+        <AppContext.Provider value={{ user, isAuth, loading, setUser, setLoading, setIsAuth, logoutUser, blogs, blogLoading, searchQuery, setSearchQuery, category, setCategory, fetchBlogs, savedBlogs, getSavedBlogs}}>
             <GoogleOAuthProvider clientId={"480344245099-46e22ukfddqd2h276kpruh939po6e7rc.apps.googleusercontent.com"}>
                 {children} <Toaster />
             </GoogleOAuthProvider>

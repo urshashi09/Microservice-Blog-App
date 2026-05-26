@@ -18,7 +18,7 @@ const Navbar = () => {
         <nav className='bg-white shadow-md p-4 z-50' >
             <div className='container mx-auto flex justify-between items-center' >
                 <Link href={"/"} className='text-xl font-bold text-gray-900'>
-                    The Reading Retreat
+                    VibeLogs 
                 </Link>
 
                 <div className='md:hidden'>

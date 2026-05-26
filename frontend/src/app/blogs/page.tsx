@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Filter } from 'lucide-react'
 import Loading from '@/src/components/loading'
 import { useAppData } from '@/src/context/AppContext'
+import BlogCard from '@/src/components/BlogCard'
 
 
 const Blogs = () => {
@@ -34,7 +35,7 @@ const Blogs = () => {
                 {blogs?.length===0 && <p className="text-center text-gray-500 col-span-full">No blogs found.</p>}
                 {
                   blogs && blogs.map((e,i)=>{
-                    return <p key={i}>{e.title}</p>
+                    return <BlogCard key={i} image={e.image} title={e.title} description={e.description} id={e.id} time={e.created_at}   />
                   })
                 }
               </div>
