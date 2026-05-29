@@ -10,7 +10,7 @@ import {GoogleOAuthProvider} from '@react-oauth/google'
 
 const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? ""
 
-export const user_service= "https://user-service2-8fen.onrender.com/api/v1" 
+export const user_service= "https://user-service2-8fen.onrender.com/api/user" 
 export const author_service= "https://author-service-ztfg.onrender.com/api/v1"
 export const blog_service= "https://blog-service-7rf9.onrender.com/api/v1"
 
