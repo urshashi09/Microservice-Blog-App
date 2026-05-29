@@ -8,7 +8,7 @@ import React, { useRef, useState, useMemo, useEffect, type ChangeEvent, type For
 import dynamic from 'next/dynamic'
 import Cookies from 'js-cookie'
 import axios from 'axios'
-import { author_service, blog_service, useAppData } from '@/src/context/AppContext'
+import { author_service, Blog, blog_service, useAppData } from '@/src/context/AppContext'
 import toast from 'react-hot-toast'
 import { blogCategories } from '../../new/page'
 import { Card, CardContent, CardHeader } from '@/src/components/ui/card'
@@ -28,6 +28,10 @@ interface BlogFormData {
     category: string
     image: File | null
     blogcontent: string
+}
+
+interface SingleBlogResponse {
+    blog: Blog
 }
 
 const hasApiErrorResponse = (error: unknown): error is ApiError => {
@@ -92,7 +96,7 @@ const EditBlogPage = () => {
             setLoading(true)
             try {
                 const token = Cookies.get("token")
-                const { data } = await axios.get(`${blog_service}/blog/${id}`, {
+                const { data } = await axios.get<SingleBlogResponse>(`${blog_service}/blog/${id}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }

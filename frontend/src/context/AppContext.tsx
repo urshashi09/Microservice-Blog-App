@@ -39,7 +39,7 @@ export interface Blog{
 
 }
 
-interface SavedBlogType extends Blog {
+export interface SavedBlogType extends Blog {
     saved_id: string;
     blogid: string;
     userid: string;
@@ -123,7 +123,7 @@ export const AppProvider: React.FC<AppProviderProps>=(({children}) => {
     async function getSavedBlogs() {
         try{
             const token = Cookies.get("token")
-            const {data}= await axios.get(`${blog_service}/blog/saved/all`,{
+            const {data}= await axios.get<SavedBlogType[]>(`${blog_service}/blog/saved/all`,{
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

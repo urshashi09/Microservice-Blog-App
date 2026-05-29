@@ -23,6 +23,17 @@ interface Comment {
     userid: string
 }
 
+interface SingleBlogResponse {
+    blog: Blog
+    author: {
+        user: User
+    }
+}
+
+interface MessageResponse {
+    message: string
+}
+
 type ApiError = {
     response?: {
         data?: {
@@ -54,7 +65,7 @@ const BlogPage = () => {
 
     async function fetchComments(){
         try{
-            const {data}= await axios.get(`${blog_service}/comment/${id}`)
+            const {data}= await axios.get<Comment[]>(`${blog_service}/comment/${id}`)
             setComments(data)
         }catch(error){
             console.log("error",error)
@@ -94,7 +105,7 @@ const BlogPage = () => {
             setLoading(true)
             setError("")
 
-            const { data } = await axios.get(`${blog_service}/blog/${id}`)
+            const { data } = await axios.get<SingleBlogResponse>(`${blog_service}/blog/${id}`)
 
             setBlog(data.blog)
             setAuthor(data.author.user)
@@ -166,7 +177,7 @@ const BlogPage = () => {
         try{
             setLoading(true)
             
-            const {data}= await axios.post(`${blog_service}/save/${id}`, {},{
+            const {data}= await axios.post<MessageResponse>(`${blog_service}/save/${id}`, {},{
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -312,4 +323,3 @@ const BlogPage = () => {
 }
 
 export default BlogPage
-
