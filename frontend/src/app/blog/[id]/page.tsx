@@ -205,7 +205,10 @@ const BlogPage = () => {
         <div className="w-full max-w-4xl mx-auto p-6 space-y-6">
             <Card className="w-full">
                 <CardHeader>
-                    <h1 className="text-3xl font-bold text-gray-900">{blog.title}</h1>
+                    <div className="flex  justify-between items-start">
+                        <h1 className="text-3xl font-bold text-gray-900">{blog.title}</h1>
+                    <h2 className="text-xl text-gray-600">{blog.category}</h2>
+                    </div>
                     {author && (
                         <p className="text-gray-600 mt-2 flex items-center">
                             <Link href={`/profile/${author._id}`} className="flex items-center gap-2">
@@ -243,7 +246,7 @@ const BlogPage = () => {
             </Card>
 
             {
-                isAuth && (
+                isAuth ? (
                     <Card>
                         <CardHeader>
                             <h2 className="text-2xl font-bold text-gray-900">Comments</h2>
@@ -254,6 +257,20 @@ const BlogPage = () => {
                             <Button onClick={addComment} disabled={loading}>
                                 {loading ? "Posting..." : "Post Comment"}
                             </Button>
+                        </CardContent>
+                    </Card>
+                ) : (
+                    <Card>
+                        <CardHeader>
+                            <h2 className="text-2xl font-bold text-gray-900">Comments</h2>
+                        </CardHeader>
+                        <CardContent className="text-center py-4">
+                            <p className="text-gray-500">
+                                Please{" "}
+                                <Link href="/login" className="text-blue-500 hover:underline font-semibold">
+                                    login to comment
+                                </Link>
+                            </p>
                         </CardContent>
                     </Card>
                 )

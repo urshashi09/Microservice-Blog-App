@@ -247,7 +247,7 @@ const AddBlog = () => {
                 required />
               {formdata.title===""?"": <Button type="button" onClick={aiDescriptionResponse} disabled={aiDescription}>
                 <RefreshCw className={aiDescription? "animate-spin": ""} size={16}/>
-                <span className='ml-2'>AI Fix</span>
+                <span className='ml-2'>{formdata.description.trim() === "" ? "AI Generate" : "AI Fix"}</span>
               </Button>}
             </div>
 
@@ -280,7 +280,7 @@ const AddBlog = () => {
               <div className="flex justify-between items-center mb-2">
                 <p className="text-sm text-muted-foreground">
                   Write your blog content here. You can use markdown syntax for formatting.
-                  Please add the image after improving grammer
+                  Please add any image in blog content after fixing grammar
                 </p>
                 <Button type="button" size={"sm"} onClick={aiBlogResponse} disabled={aiBlogLoading}>
                   <RefreshCw size={16} className={aiBlogLoading? "animate-spin": ""} />

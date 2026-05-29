@@ -8,9 +8,11 @@ import { Toaster } from "react-hot-toast";
 import {GoogleOAuthProvider} from '@react-oauth/google'
 
 
-export const user_service= "http://localhost:6001/api/user"
-export const author_service= "http://localhost:5000/api/v1"
-export const blog_service= "http://localhost:7000/api/v1"
+const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? ""
+
+export const user_service= "https://user-service2-8fen.onrender.com/api/v1" 
+export const author_service= "https://author-service-ztfg.onrender.com/api/v1"
+export const blog_service= "https://blog-service-7rf9.onrender.com/api/v1"
 
 export interface User{
     _id: string;
@@ -161,7 +163,7 @@ export const AppProvider: React.FC<AppProviderProps>=(({children}) => {
     },[searchQuery, category])
     return (
         <AppContext.Provider value={{ user, isAuth, loading, setUser, setLoading, setIsAuth, logoutUser, blogs, blogLoading, searchQuery, setSearchQuery, category, setCategory, fetchBlogs, savedBlogs, getSavedBlogs}}>
-            <GoogleOAuthProvider clientId={"480344245099-46e22ukfddqd2h276kpruh939po6e7rc.apps.googleusercontent.com"}>
+            <GoogleOAuthProvider clientId={googleClientId}>
                 {children} <Toaster />
             </GoogleOAuthProvider>
         </AppContext.Provider>

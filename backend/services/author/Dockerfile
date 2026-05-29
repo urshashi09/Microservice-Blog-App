@@ -1,22 +1,25 @@
-FROM node:22-alpine AS build
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci
+
+RUN npm install
 
 COPY tsconfig.json ./
+
 COPY src ./src
+
 RUN npm run build
 
 FROM node:22-alpine AS runtime
 
 WORKDIR /app
-ENV NODE_ENV=production
 
 COPY package*.json ./
-RUN npm ci --omit=dev
 
-COPY --from=build /app/dist ./dist
+RUN npm install --only=production
 
-CMD ["npm", "start"]
+COPY --from=builder /app/dist ./dist
+
+CMD ["node", "dist/server.js"]

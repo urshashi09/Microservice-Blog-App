@@ -8,16 +8,12 @@ export const connectRabbitmq = async () => {
     let attempt = 1;
     while (true) {
         try {
-            const connection = await amqp.connect({
-                protocol: "amqp", 
-                hostname: process.env.RABBITMQ_HOST || "localhost",
-                port: Number(process.env.RABBITMQ_PORT) || 5672,
-                username: process.env.RABBITMQ_USER || "admin", 
-                password: process.env.RABBITMQ_PASSWORD || "admin123",
-            }); 
-            
+            const connection = await amqp.connect(
+                process.env.RABBITMQ_URL!
+            );;
+
             channel = await connection.createChannel();
-            
+
             // Set up connection handlers for automatic reconnection
             connection.on("error", (err) => {
                 console.error("❌ RabbitMQ connection error:", err);

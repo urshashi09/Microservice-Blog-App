@@ -22,6 +22,10 @@ connectDB();
 
 app.use('/api/user', userRoutes);
 
+app.get('/', (req, res) => {
+    res.send('User service is running');
+});
+
 const PORT = process.env.PORT || 6001;
 
 app.listen(PORT, () => {

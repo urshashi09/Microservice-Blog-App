@@ -13,13 +13,9 @@ export const startCacheConsumer = async () => {
     let attempt = 1;
     while (true) {
         try {
-            const connection = await amqp.connect({
-                protocol: "amqp",
-                hostname: process.env.RABBITMQ_HOST || "localhost",
-                port: Number(process.env.RABBITMQ_PORT) || 5672,
-                username: process.env.RABBITMQ_USER || "admin",
-                password: process.env.RABBITMQ_PASSWORD || "admin123",
-            });
+            const connection = await amqp.connect(
+    process.env.RABBITMQ_URL!
+);
             
             const channel = await connection.createChannel();
             const queueName = "cache-invalidation";
